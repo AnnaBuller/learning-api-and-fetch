@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx webpack-dev-server --open",
-    "build": "npx webpack --mode production"
+    "start": "npx webpack-dev-server -d --open",
+    "build": "npx webpack --mode production",
+    "api": "json-server ./data/excursions.json --watch"
   },
   "keywords": [],
   "author": "",
