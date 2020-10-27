@@ -12,6 +12,8 @@ function init() {
   // changeTripData()
 }
 
+//posprawdzać czy wyszukane elementy istnieją! (prototypy i ul)
+
 function showTrips() {
   tripsList.loadData(pathToTrips)
     .then(res => {
@@ -19,12 +21,14 @@ function showTrips() {
       const valuesArrs = _getValuesOfKeys(res, apiKeys);
       const DOMElementsSelectors = ['.excursions__title', '.excursions__description', '.excursions__price-adult', '.excursions__price-child'];
       const ulEl = document.querySelector('.panel__excurions')
-      valuesArrs.forEach(arr => {
+      if (ulEl) {
+        valuesArrs.forEach(arr => {
         const liElement = createElementFromPrototype('.excurions__item--prototype', 'prototype')
         const DOMElements = getDOMElementsOfSelectors(DOMElementsSelectors, liElement);
         assignInnerTextFromValuesArr(DOMElements, arr)
         ulEl.appendChild(liElement)
-      })
+        })
+      }
     })
 }
 
@@ -59,11 +63,13 @@ function getDOMElementsOfSelectors(arrOfSelectors, rootElement = document) {
 
 function createElementFromPrototype(selector, prototypeIndicatorWord, rootElement = document) {
   const prototype = rootElement.querySelector(selector);
+  if (prototype) {
   const createdEl = prototype.cloneNode(true);
   const classList = createdEl.classList;
   removeClassContainingString(classList, prototypeIndicatorWord);
   console.log(createdEl)
-  return createdEl
+    return createdEl
+  }
 }
 
 function removeClassContainingString(classList, string) {
