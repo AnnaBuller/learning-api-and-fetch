@@ -1,8 +1,10 @@
 import './../css/admin.css';
 import ExcursionsAPI from './ExcursionsAPI';
+import DOMHelper from './DOMHelper';
 
 document.addEventListener('DOMContentLoaded', init)
 const tripsList = new ExcursionsAPI;
+const domHelper = new DOMHelper; 
 const pathToTrips = 'excursions';
 
 function init() {
@@ -23,9 +25,9 @@ function showTrips() {
       const ulEl = document.querySelector('.panel__excurions')
       if (ulEl) {
         valuesArrs.forEach(arr => {
-        const liElement = createElementFromPrototype('.excurions__item--prototype', 'prototype')
-        const DOMElements = getDOMElementsOfSelectors(DOMElementsSelectors, liElement);
-        assignInnerTextFromValuesArr(DOMElements, arr)
+          const liElement = domHelper.createElementFromPrototype('.excurions__item--prototype', 'prototype')
+          const DOMElements = domHelper.getDOMElementsOfSelectors(DOMElementsSelectors, liElement);
+          domHelper.assignInnerTextFromValuesArr(DOMElements, arr)
         ulEl.appendChild(liElement)
         })
       }
@@ -55,51 +57,4 @@ function _getValuesOfKeys(arrOfObj, key) {
   return arr
 }
 
-function getDOMElementsOfSelectors(arrOfSelectors, rootElement = document) {
-  return arrOfSelectors.map(selector => {
-    return rootElement.querySelector(selector)
-  })
-}
-
-function createElementFromPrototype(selector, prototypeIndicatorWord, rootElement = document) {
-  const prototype = rootElement.querySelector(selector);
-  if (prototype) {
-  const createdEl = prototype.cloneNode(true);
-  const classList = createdEl.classList;
-  removeClassContainingString(classList, prototypeIndicatorWord);
-  console.log(createdEl)
-    return createdEl
-  }
-}
-
-function removeClassContainingString(classList, string) {
-  const classListArr = Array.from(classList);
-  const unwantedClassesArr = classListArr.filter(el => el.includes(string));
-  unwantedClassesArr.forEach(item => classList.remove(item))
-}
-
-function assignInnerTextFromValuesArr(DOMElArr, valuesArr) {
-  const arr = [];
-  for (let i = 0; i < DOMElArr.length; i++) {
-    DOMElArr[i].innerText = valuesArr[i];
-    arr.push(DOMElArr[i]);
-  }
-  return arr
-}
-
-// createElementFromPrototype('.excurions__item--prototype', 'prototype')
-
-// const domArr = getDOMElementsOfSelectors(['.excursions__title', '.excursions__description'], createElementFromPrototype('.excurions__item--prototype', 'prototype'));
-// const valuesArr = ['JEDEDN DWA TRZY', 'próba generalna']
-// // console.log(domArr)
-
-// const wynik = _assignInnerTextFromValuesArr(domArr, valuesArr);
-// console.log(wynik)
-
-// const arrOfSelectors = ['.excursions__title', '.excursions__description'];
-
-// const arr1 = _getDOMElements(arrOfSelectors);
-// const arr2 = ['KOCI KOCI ŁAPCI', 'pojedziem do babci, babcia da nam mleczka. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Amet aliquam quam laboriosam quaerat temporibus dicta vitae maxime!']
-
-// _assignInnerText(arr1, arr2)
 
