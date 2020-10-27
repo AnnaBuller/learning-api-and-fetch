@@ -1,4 +1,19 @@
 {
-    "excursions": [],
-    "orders": []
+  "excursions": [
+    {
+      "id": 1,
+      "title": "Lorem Ipsum",
+      "description": "Lorem Ipsum dolor sit amet to jes topis wycieczki o tytule Lorem Ipsum",
+      "price-adult": 120,
+      "price-child": 80
+    },
+    {
+      "id": 2,
+      "title": "Kotki dwa",
+      "description": "Tralala, zaspiewajmy sobie o dwóch kotkach. Lorem Ipsum dolor sit amet to jes topis wycieczki o tytule Lorem Ipsum",
+      "price-adult": 500,
+      "price-child": 20
+    }
+  ],
+  "orders": []
 }
