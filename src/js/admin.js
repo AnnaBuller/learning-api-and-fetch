@@ -15,12 +15,16 @@ function init() {
 function showTrips() {
   tripsList.loadData(pathToTrips)
     .then(res => {
-      const values = _getValuesOfKeys(res, ['title', 'description', 'price-adult', 'price-child']);
-      const DOMElements = _getDOMElements(['.excursions__title', '.excursions__description', '.excursions__price-adult', '.excursions__price-child'], document.querySelector('.panel__excurions'));
-      console.log(values)
-      console.log(DOMElements)
-      _assignInnerText(DOMElements, values)
-      //Trzeba to rozwiązać jakoś inaczej. Lepiej chyba destrukturyzować pobrane wartości i przypisać je do konkretnych elementów DOM ręcznie (choć można nadal pobierac je jako array i potem destrukturyzować)
+      const apiKeys = ['title', 'description', 'price-adult', 'price-child']
+      const valuesArrs = _getValuesOfKeys(res, apiKeys);
+      const DOMElementsSelectors = ['.excursions__title', '.excursions__description', '.excursions__price-adult', '.excursions__price-child'];
+      const ulEl = document.querySelector('.panel__excurions')
+      valuesArrs.forEach(arr => {
+        const liElement = createElementFromPrototype('.excurions__item--prototype', 'prototype')
+        const DOMElements = getDOMElementsOfSelectors(DOMElementsSelectors, liElement);
+        assignInnerTextFromValuesArr(DOMElements, arr)
+        ulEl.appendChild(liElement)
+      })
     })
 }
 
@@ -47,26 +51,44 @@ function _getValuesOfKeys(arrOfObj, key) {
   return arr
 }
 
-// function _createListItems(arrOfObj) {
-//   return arrOfObj.map(item => {
-//     const liItem = document.createElement('li');
-//     const { name, id } = item;
-//     liItem.innerText = name + ' ' + id;
-//     return liItem
-//   })
-// }
-
-function _assignInnerText(arr1, arr2) {
-  arr1.forEach(function (element, index) {
-    element.innerText = arr2[index]
-  })
-}
-
-function _getDOMElements(arrOfSelectors, rootElement = document) {
+function getDOMElementsOfSelectors(arrOfSelectors, rootElement = document) {
   return arrOfSelectors.map(selector => {
     return rootElement.querySelector(selector)
   })
 }
+
+function createElementFromPrototype(selector, prototypeIndicatorWord, rootElement = document) {
+  const prototype = rootElement.querySelector(selector);
+  const createdEl = prototype.cloneNode(true);
+  const classList = createdEl.classList;
+  removeClassContainingString(classList, prototypeIndicatorWord);
+  console.log(createdEl)
+  return createdEl
+}
+
+function removeClassContainingString(classList, string) {
+  const classListArr = Array.from(classList);
+  const unwantedClassesArr = classListArr.filter(el => el.includes(string));
+  unwantedClassesArr.forEach(item => classList.remove(item))
+}
+
+function assignInnerTextFromValuesArr(DOMElArr, valuesArr) {
+  const arr = [];
+  for (let i = 0; i < DOMElArr.length; i++) {
+    DOMElArr[i].innerText = valuesArr[i];
+    arr.push(DOMElArr[i]);
+  }
+  return arr
+}
+
+// createElementFromPrototype('.excurions__item--prototype', 'prototype')
+
+// const domArr = getDOMElementsOfSelectors(['.excursions__title', '.excursions__description'], createElementFromPrototype('.excurions__item--prototype', 'prototype'));
+// const valuesArr = ['JEDEDN DWA TRZY', 'próba generalna']
+// // console.log(domArr)
+
+// const wynik = _assignInnerTextFromValuesArr(domArr, valuesArr);
+// console.log(wynik)
 
 // const arrOfSelectors = ['.excursions__title', '.excursions__description'];
 
@@ -75,4 +97,3 @@ function _getDOMElements(arrOfSelectors, rootElement = document) {
 
 // _assignInnerText(arr1, arr2)
 
-console.log('na końcu')
