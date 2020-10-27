@@ -3,8 +3,8 @@ class ExcursionsAPI {
     this.api = url;
   }
 
-  loadData() {
-    return this._fetch();
+  loadData(path) {
+    return this._fetch(path);
   }
 
   createNewData(tripData, path) {
@@ -13,15 +13,15 @@ class ExcursionsAPI {
       body: JSON.stringify(tripData),
       headers: { 'Content-Type': 'application/json' }
     }
-    return this._fetch(options, path)
+    return this._fetch(path, options)
   }
 
   deleteData(path, id) {
     const options = {
       method: 'DELETE',
     }
-    return this._fetch(options, path, id)
-  }
+    return this._fetch(path, options, id)
+  } 
 
   updateData(updatedEl, path, id) {
     const options = {
@@ -29,19 +29,21 @@ class ExcursionsAPI {
       body: JSON.stringify(updatedEl),
       headers: { 'Content-Type': 'application/json' }
     }
-    return this._fetch(options, path, id)
+    return this._fetch(path, options, id)
   }
 
 
-  _fetch(options, resource = '', id = '') {
+  _fetch(resource = '', options, id = '') {
     const url = this.api + resource + `/${id}`;
     const promise = fetch(url, options);
-    return promise
-      .then(res => res.ok ? res.json : Promise.reject(res))
+    return promise      
+      .then(res => res.ok ? res.json() : Promise.reject(res))
   }
 
 }
 
 const kk = new ExcursionsAPI();
+
+
 
 export default ExcursionsAPI;
