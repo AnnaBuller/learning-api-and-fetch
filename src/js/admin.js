@@ -13,6 +13,7 @@ function init() {
 
   findEl()
   showTrips(ulEl, prototypeLi);
+  findEl()
   createTrip(ulEl, prototypeLi);
   deleteTrip();
   // changeTripData()
@@ -91,7 +92,7 @@ function findEl() {
 }
 
 function deleteTrip() {
-  const deleteBtns = document.querySelector('div');
+  const deleteBtns = document.querySelector('li');
   console.log(deleteBtns)
   console.log(document)
   // tripsList.deleteData(pathToTrips, 6)
