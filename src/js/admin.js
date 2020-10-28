@@ -11,12 +11,12 @@ function init() {
   const ulEl = domHelper.findElement('.panel__excurions');
   const prototypeLi = domHelper.findElement('.excurions__item--prototype');
 
+  findEl()
   showTrips(ulEl, prototypeLi);
   createTrip(ulEl, prototypeLi);
   deleteTrip();
   // changeTripData()
 }
-findEl()
 
 
 function showTrips(ulEl, prototypeLi) {
@@ -91,7 +91,7 @@ function findEl() {
 }
 
 function deleteTrip() {
-  const deleteBtns = document.querySelector('li');
+  const deleteBtns = document.querySelector('div');
   console.log(deleteBtns)
   console.log(document)
   // tripsList.deleteData(pathToTrips, 6)
