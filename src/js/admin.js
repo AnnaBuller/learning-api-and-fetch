@@ -8,103 +8,97 @@ const domHelper = new DOMHelper;
 const pathToTrips = 'excursions';
 
 function init() {
-  showTrips();
-  // createTrip();
-  // deleteTrip();
+  const ulEl = domHelper.findElement('.panel__excurions');
+  const prototypeLi = domHelper.findElement('.excurions__item--prototype');
+
+  showTrips(ulEl, prototypeLi);
+  createTrip(ulEl, prototypeLi);
+  deleteTrip();
   // changeTripData()
 }
+findEl()
 
 
-function showTrips() {
+function showTrips(ulEl, prototypeLi) {
+  ulEl.innerText = '';
   tripsList.loadData(pathToTrips)
     .then(res => {
-      const apiKeys = ['title', 'description', 'price-adult', 'price-child']
+      const apiKeys = ['title', 'description', 'price-adult', 'price-child', 'id']
       const apiValuesArrs = _getValuesOfKeys(res, apiKeys);
-      const ulEl = domHelper.findElement('.panel__excurions');
-      const prototypeLi = domHelper.findElement('.excurions__item--prototype');
 
-      apiValuesArrs.forEach(arr => {
-        const [title, description, priceAdult, priceChild] = arr;
-        const arrOfElAndTextPairs = [
-          matchSelectorWithValue('.excursions__title', title),
-          matchSelectorWithValue('.excursions__description', description),
-          matchSelectorWithValue('.excursions__price-adult', priceAdult),
-          matchSelectorWithValue('.excursions__price-child', priceChild)];
-
-        const liEl = domHelper.createElementFromPrototype(prototypeLi, 'prototype');
-
-        arrOfElAndTextPairs.forEach(pair => {
-          const element = setInnerText(pair.selector, pair.value);
-          liEl.appendChild(element);
-        })
-
-        ulEl.appendChild(liEl)
-      })
-      // createLiWithValues(apiValuesArrs)
+      apiValuesArrs.forEach(arr => createLiWithItems(arr, ulEl, prototypeLi))
     })
 }
 
-function matchSelectorWithValue(selector, value) {
+function createLiWithItems(arrOfInnerText, ulEl, prototypeLi) {
+  const [title, description, priceAdult, priceChild, id] = arrOfInnerText;
+  const liEl = domHelper.createElementFromPrototype(prototypeLi, 'prototype');
+  liEl.dataset.id = id;
+
+  const arrOfElAndTextPairs = [
+    matchElementWithText('.excursions__title', liEl, title),
+    matchElementWithText('.excursions__description', liEl, description),
+    matchElementWithText('.excursions__price-adult', liEl, priceAdult),
+    matchElementWithText('.excursions__price-child', liEl, priceChild)];
+
+  arrOfElAndTextPairs.forEach(pair => {
+    return domHelper.setInnerText(pair.element, pair.value);
+  })
+
+  ulEl.appendChild(liEl)
+}
+
+function matchElementWithText(selector, rootEl, value) {
+  const element = domHelper.findElement(selector, rootEl);
   const obj = {
-    selector,
+    element,
     value
   }
   return obj
 }
 
-function setInnerText(selector, value) {
-  const element = domHelper.findElement(selector);
-  element.innerText = value;
-  return element
+function createTrip(ulEl, prototypeLi) {
+  const form = domHelper.findElement('.form')
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    manageTripFromForm(e.target, ulEl, prototypeLi)
+  }) 
 }
-/* function createLiWithValues(arrOfArrays) {
-  const DOMElementsSelectors = ['.excursions__title', '.excursions__description', '.excursions__price-adult', '.excursions__price-child'];
-  const ulEl = domHelper.findElement('.panel__excurions');
-  const prototypeLi = domHelper.findElement('.excurions__item--prototype');
-  if (ulEl && prototypeLi) {
-    arrOfArrays.forEach(arr => {
-      const liElement = domHelper.createElementFromPrototype(prototypeLi, 'prototype');
-      const DOMElements = domHelper.getElementsOfSelectors(DOMElementsSelectors, liElement);
-          domHelper.assignInnerTextFromValuesArr(DOMElements, arr)
-          ulEl.appendChild(liElement)
-        })
-        // ---- haloo! Coś z tym zrobić! Bo znika mi za każdym razem, jak wywołuję za pierwszym razem funkcję
-    // domHelper.hideElement(prototypeLi)
+
+function manageTripFromForm(form, ulEl, prototypeLi) {
+  const formValues = domHelper.getValuesFromForm(form, '.form__field');
+  addTripToAPI(formValues, pathToTrips);
+  showTrips(ulEl, prototypeLi)
+}
+
+function addTripToAPI(formValues, pathToTrips) {
+  const [title, description, priceAdult, priceChild] = formValues;
+  const tripData = {
+    title,
+    description,
+    'price-adult': priceAdult,
+    'price-child': priceChild
   }
-} */
+  tripsList.createNewData(tripData, pathToTrips)
+}
 
-/* const form = domHelper.findElement('.form')
-form.addEventListener('submit', e => {
-  e.preventDefault();
-  displayTripFromForm(e.target)
-})
-function displayTripFromForm(form) {
-  const formElements = form.elements
-  const formElArr = Array.from(formElements)
-  const formFields = formElArr.filter(el => el.classList.contains('form__field'));
-  const formValues = formFields.map(el => el.value);
-  const arrofArrs = [];
-  arrofArrs.push(formValues);
-  console.log(arrofArrs)
+// /////////////////???????????????????
 
-  createLiWithValues(arrofArrs)
-  // formElements.forEach(element =>
-  //   console.log(element.value))
-  //pobierz value inputów
-  //stwórz nową li
-  //pobierz elementy DOM wycieczki
-  //wstaw value inputów jako innerText elementów DOM
-
-} */
-// displayTripFromForm(form)
-
-function createTrip() {
-  tripsList.createNewData({ name: 'Zakopiec' }, pathToTrips)
+function findEl() {
+  const deleteBtns = document.querySelector('li');
+  console.log(deleteBtns)
+  console.log(document)
 }
 
 function deleteTrip() {
-  tripsList.deleteData(pathToTrips, 7)
+  const deleteBtns = document.querySelector('li');
+  console.log(deleteBtns)
+  console.log(document)
+  // tripsList.deleteData(pathToTrips, 6)
+  // showTrips(ulEl, prototypeLi)
 }
+// /////////////////???????????????????
+
 
 function changeTripData() {
   tripsList.updateData({ name: 'updateTEST' }, pathToTrips, 8)
