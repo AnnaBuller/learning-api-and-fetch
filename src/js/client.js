@@ -1,5 +1,17 @@
-import './../css/client.css';
+import './../css/admin.css';
+import DOMHelper from './DOMHelper';
+import ExcursionsManager from './ExcursionsManager';
 
-import ExcursionsAPI from './ExcursionsAPI';
+document.addEventListener('DOMContentLoaded', init);
+const domHelper = new DOMHelper;
+const exManager = new ExcursionsManager;
 
-console.log('client');
+function init() {
+  const ulEl = domHelper.findElement('.panel__excursions');
+  const prototypeLi = domHelper.findElement('.excursions__item--prototype');
+
+  exManager.showTrips(ulEl, prototypeLi);
+  exManager.addToCart()
+  ulEl.addEventListener('listLoaded', exManager.orderTrips(ulEl))
+}
+

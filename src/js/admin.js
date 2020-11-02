@@ -4,18 +4,17 @@ import DOMHelper from './DOMHelper';
 import ExcursionsManager from './ExcursionsManager';
 
 document.addEventListener('DOMContentLoaded', init);
-// const tripsList = new ExcursionsAPI;
 const domHelper = new DOMHelper; 
 const exManager = new ExcursionsManager; 
 
 function init() {
-  const ulEl = domHelper.findElement('.panel__excurions');
-  const prototypeLi = domHelper.findElement('.excurions__item--prototype');
+  const ulEl = domHelper.findElement('.panel__excursions');
+  const prototypeLi = domHelper.findElement('.excursions__item--prototype');
+  const form = domHelper.findElement('.form')
 
   exManager.showTrips(ulEl, prototypeLi);
-  exManager.createTrip(ulEl, prototypeLi);
+  exManager.createTrip(form, ulEl, prototypeLi);
 
-  // ulEl.addEventListener('listLoaded', exManager.deleteTrip)
-  // ulEl.addEventListener('listLoaded', exManager.changeTripData)
+  ulEl.addEventListener('listLoaded', exManager.manageTrips(ulEl, prototypeLi))
 }
 

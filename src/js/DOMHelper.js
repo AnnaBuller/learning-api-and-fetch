@@ -1,20 +1,41 @@
 export default class DOMHelper {
 
-  getDOMElementsOfSelectors(arrOfSelectors, rootElement = document) {
+  getElementsOfSelectors(arrOfSelectors, rootElement = document) {
     return arrOfSelectors.map(selector => {
       return rootElement.querySelector(selector)
     })
   }
 
-  createElementFromPrototype(selector, prototypeIndicatorWord, rootElement = document) {
-    const prototype = rootElement.querySelector(selector);
-    if (prototype) {
-      const createdEl = prototype.cloneNode(true);
+  createElementFromPrototype(element, prototypeIndicatorWord) {
+    if (element) {
+      const createdEl = element.cloneNode(true);
       const classList = createdEl.classList;
       this.removeClassContainingString(classList, prototypeIndicatorWord);
-      console.log(createdEl)
       return createdEl
     }
+  }
+
+  findElement(selector, rootElement = document) {
+    const element = rootElement.querySelector(selector);
+    return element
+  }
+
+  findMultipleElements(selector, rootElement = document) {
+    const elements = rootElement.querySelectorAll(selector);
+    return [...(elements)]
+  }
+
+  hideElement(element) {
+    element.style.display = 'none'
+  }
+
+  removeChildrenOfParent(childrenArr, parentEl) {
+    childrenArr.forEach(item => parentEl.removeChild(item))
+  }
+
+  setInnerText(element, value) {
+    element.innerText = value;
+    return element
   }
 
   removeClassContainingString(classList, string) {
@@ -30,5 +51,10 @@ export default class DOMHelper {
       arr.push(DOMElArr[i]);
     }
     return arr
+  }
+
+  getValuesFromForm(form, slotSelector) {
+    const formElements = form.querySelectorAll(slotSelector);
+    return Array.from(formElements).map(slot => slot.value)
   }
 }

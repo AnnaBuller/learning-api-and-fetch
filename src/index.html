@@ -9,24 +9,24 @@
 <body>
 
     <section class="panel">
-        <ul class="panel__excurions excursions">
-            <li class="excurions__item excurions__item--prototype">
+        <ul class="panel__excursions excursions">
+            <li class="excursions__item excursions__item--prototype">
                 <header class="excursions__header">
                     <h2 class="excursions__title">Ogrodzieniec</h2>
                     <p class="excursions__description">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Amet aliquam quam laboriosam quaerat temporibus dicta vitae maxime! Nemo, nobis veritatis?</p>
                 </header>
                 <form class="excursions__form">
-                    <div class="excurions__field">
+                    <div class="excursions__field">
                         <label class="excursions__field-name">
-                            Dorosły: 99PLN x <input class="excursions__field-input" name="adults" />
+                            Dorosły: <strong class="excursions__price-adult">99</strong>PLN x <input class="excursions__field-input" name="adults" />
                         </label>
                     </div>
-                    <div class="excurions__field">
+                    <div class="excursions__field">
                         <label class="excursions__field-name">
-                            Dziecko: 50PLN x <input class="excursions__field-input" name="children" />
+                            Dziecko: <strong class="excursions__price-child">50</strong>PLN x <input class="excursions__field-input" name="children" />
                         </label>
                     </div>
-                    <div class="excurions__field excurions__field--submit">
+                    <div class="excursions__field excursions__field--submit">
                         <input 
                             class="excursions__field-input excursions__field-input--submit" 
                             value="dodaj do zamówinia"
@@ -64,10 +64,10 @@
                 <li class="summary__item summary__item--prototype">
                     <h3 class="summary__title">
                         <span class="summary__name">Ogrodzieniec</span>
-                        <strong class="summay__total-price">199PLN</strong> 
+                        <strong class="summary__total-price">199</strong>PLN 
                         <a href="" class="summary__btn-remove" title="usuń">X</a>
                     </h3>
-                    <p class="summary__prices">dorośli: 1 x 99PLN, dzieci: 2 x 50PLN</p>
+                    <p class="summary__prices">dorośli: <span class="summary__amount-adult">1</span> x <span class="summary__prices-adult">99</span>PLN, dzieci: <span class="summary__amount-children">2</span> x <span class="summary__prices-children">50</span>PLN</p>
                 </li>
             </ul>
         </section>
