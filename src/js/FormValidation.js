@@ -1,17 +1,24 @@
 export default class FormValidation {
 
   isValueANumber(formEl) {
-    if (!isNaN(formEl.value)) {
-      return true
-    }
-    else { this.returnError('wprowadzona wartość nie jest liczbą') }
+    return !isNaN(formEl.value)
+  }
+
+  areValuesNumbers(...formElements) {
+    return [...formElements].every(element => this.isValueANumber(element))
   }
 
   isFieldFilled(formEl) {
-    if (formEl.value !== '') {
-      return true
-    }
-    else { this.returnError(`pole \"${formEl.parentElement.innerText}\" nie zostało wypełnione`) }
+    return formEl.value !== ''
+    // else { this.returnError(`pole \"${formEl.parentElement.innerText}\" nie zostało wypełnione`) }
+  }
+
+  isValueZeroOrEmpty(formEl) {
+    return formEl.value === '' || formEl.value === "0"
+  }
+
+  onlyOneValueMoreThanZero(...formElements) {
+    return [...formElements].some(element => !this.isValueZeroOrEmpty(element))
   }
 
   areReqFieldsFilled(fieldsArr) {

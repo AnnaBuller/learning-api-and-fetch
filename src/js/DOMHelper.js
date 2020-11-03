@@ -57,4 +57,11 @@ export default class DOMHelper {
     const formElements = form.querySelectorAll(slotSelector);
     return Array.from(formElements).map(slot => slot.value)
   }
+
+  isElementInDOM(element) {
+    return element !== null
+  }
+  areElementsInDOM(...elements) {
+    return [...elements].every(element => this.isElementInDOM(element))
+}
 }

@@ -188,83 +188,91 @@ export default class ExcursionsManager {
   // tutaj dla client.js
 
 
-  orderTrips(ulEl) {
-    ulEl.addEventListener('click', e => {
+  orderTrips(ulEl, prototypeLi, ulElCart, prototypeLiCart) {
+
+    ulEl.addEventListener('submit', e => {
       e.preventDefault();
-      console.log('clicked')
-      this.addToCart(e, ulEl);
+      this.addToCart(e, ulEl, prototypeLi, ulElCart, prototypeLiCart);
     })
   }
 
-  addToCart(e, ulEl) {
+  addToCart(e, ulEl, prototypeLi, ulElCart, prototypeLiCart) {
+    console.log('funckja jedynie się uruchomiła');
+    const cartItemsObj = this._createCartLiEl(ulElCart, prototypeLiCart);
+    const orderDataObj = this._getTripOrderData(e);
 
-    console.log(e.target) //nie działa!!!!!!!!!!!!!!!!!!!!!
-    console.log(ulEl)
-    //form to jakiś e.target
-
-    // ///////// tutaj walidacja formularza 
-
-    // const cartData = this._cartItems();
-    // const tripData = this._tripOrderData();
-
-    // console.log(tripData.title)
-
+    this._putOrderToCart(cartItemsObj, orderDataObj);
   }
+
+  _putOrderToCart(cartItemsObj, orderDataObj) {
+    for (let element in cartItemsObj) {
+      cartItemsObj[element].innerText = orderDataObj[element]
+    }
+  }
+  // OK, nie tak. Trzeba wrzucić przyporządkowywanie innerTextu do jednej funkcji, by można było dodać Li do koszyka
+
 
   _getInnerText(element) {
     return element.innerText
   }
 
   // TO SĄ DANE I INPUTY KTÓRE MAM POBRAĆ Z DANEJ WYCIECZKI Z LISTY
-  _tripOrderData() {
-    const orderData = {
-      title: this._getInnerText(domHelper.findElement('.excursions__title')),
-      totalPrice: domHelper.findElement('.summary__total-price'),
-      summaryAdultAmount: domHelper.findElement('[name=adults]'),
-      summaryChildAmount: domHelper.findElement('[name=children]'),
-      summaryAdultPrice: domHelper.findElement('.excursions__price-adult'),
-      summaryChildPrice: domHelper.findElement('.excursions__price-child'),
+  _getTripOrderData(e) {
+    const title = domHelper.findElement('.excursions__title', e.target.parentElement);
+    const priceAdult = domHelper.findElement('.excursions__price-adult', e.target);
+    const priceChildren = domHelper.findElement('.excursions__price-child', e.target);
+    const amountAdult = domHelper.findElement('[name=adults]', e.target);
+    const amountChildren = domHelper.findElement('[name=children]', e.target);
+
+    //optymalniej byłoby wrzucić powyższe zmienne do tablicy i zrobić spread, czy przy tej ilości można jak poniżej - po prostu je wymienić?
+    if (this._isOrderValid(title, priceAdult, priceChildren, amountAdult, amountChildren)) {
+      return this._createObjWithOrderData(title, priceAdult, priceChildren, amountAdult, amountChildren)
     }
-    return orderData
+  }
+
+  _createObjWithOrderData(title, priceAdult, priceChildren, amountAdult, amountChildren) {
+    return {
+      title: title.innerText,
+      priceAdult: priceAdult.innerText,
+      priceChild: priceChildren.innerText,
+      amountAdult: amountAdult.value === '' ? 0 : amountAdult.value,
+      amountChildren: amountChildren.value === '' ? 0 : amountChildren.value
+    }
+  }
+
+  _isOrderValid(title, priceAdult, priceChildren, amountAdult, amountChildren) {
+    if (formValidation.isFieldFilled(amountAdult) || formValidation.isFieldFilled(amountChildren)) {
+      const areInDOM = domHelper.isElementInDOM(title, priceAdult, priceChildren);
+      const oneSlotNotZeroOrEmpty = formValidation.onlyOneValueMoreThanZero(amountAdult, amountChildren);
+      const areValuesNumbers = formValidation.areValuesNumbers(amountAdult, amountChildren);
+      const boleanArr = [areInDOM, oneSlotNotZeroOrEmpty, areValuesNumbers];
+      return boleanArr.every(el => el === true)
+    }
+    // else - obsługa błędu -> pola nie zostały wypełnione
   }
   // TO SĄ MIEJSCA W KOSZYKU, DO KTÓRYCH MAM WRZUCIĆ NOWY INNER TEXT
-  _cartItems() {
-    const cartItemsObj = {
-      title: domHelper.findElement('.summary__name'),
-      totalPrice: domHelper.findElement('.summary__total-price'),
-      summaryAdultAmount: domHelper.findElement('.summary__amount-adult'),
-      summaryChildAmount: domHelper.findElement('.summary__amount-children'),
-      summaryAdultPrice: domHelper.findElement('.summary__prices-adult'),
-      summaryChildPrice: domHelper.findElement('.summary__prices-children'),
+  _createCartLiEl(ulElCart, prototypeLiCart) {
+    const liEl = domHelper.createElementFromPrototype(prototypeLiCart, 'prototype');
+    const title = domHelper.findElement('.summary__name', liEl);
+    const priceAdult = domHelper.findElement('.summary__prices-adult', liEl);
+    const priceChildren = domHelper.findElement('.summary__prices-children', liEl);
+    const amountAdult = domHelper.findElement('.summary__amount-adult', liEl);
+    const amountChildren = domHelper.findElement('.summary__amount-children', liEl);
+    const elementsExist = domHelper.areElementsInDOM(title, priceAdult, priceChildren, amountAdult, amountChildren)
+
+    if (elementsExist) {
+      return this._createObjWithCartItems(title, priceAdult, priceChildren, amountAdult, amountChildren)
     }
-    return cartItemsObj
-    // const cartLiProto = domHelper.findElement('.summary__item--prototype');
-    // const cartItem = domHelper.createElementFromPrototype(cartLiProto, 'prototype');
-    // const selectors = ['.summary__name', '.summary__total-price', '.summary__amount-adult', '.summary__amount-children', '.summary__prices-adult', '.summary__prices-children']
-    // const cartLiElements = domHelper.getElementsOfSelectors(selectors);
-    // const cartLiElValues = cartLiElements.map(el => el.innerText);
-    // console.log(cartLiElValues)
-    // console.log(cartLiElements)
-    // TU BEDZIE PODOBNIE JAK W FUNKCJI createLiWithItems()!!! 
+  }
 
-
-    // createLiWithItems(arrOfInnerText, ulEl, prototypeLi) {
-    //   const [title, description, priceAdult, priceChild, id] = arrOfInnerText;
-    //   const liEl = domHelper.createElementFromPrototype(prototypeLi, 'prototype');
-    //   liEl.dataset.id = id;
-
-    //   const arrOfElAndTextPairs = [
-    //     this.matchElementWithText('.excursions__title', liEl, title),
-    //     this.matchElementWithText('.excursions__description', liEl, description),
-    //     this.matchElementWithText('.excursions__price-adult', liEl, priceAdult),
-    //     this.matchElementWithText('.excursions__price-child', liEl, priceChild)];
-
-    //   arrOfElAndTextPairs.forEach(pair => {
-    //     return domHelper.setInnerText(pair.element, pair.value);
-    //   })
-
-    //   ulEl.appendChild(liEl);
-    // }
+  _createObjWithCartItems(title, priceAdult, priceChildren, amountAdult, amountChildren) {
+    return {
+      title,
+      priceAdult,
+      priceChildren,
+      amountAdult,
+      amountChildren
+    }
   }
 
 }

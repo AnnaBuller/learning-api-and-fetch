@@ -9,9 +9,14 @@ const exManager = new ExcursionsManager;
 function init() {
   const ulEl = domHelper.findElement('.panel__excursions');
   const prototypeLi = domHelper.findElement('.excursions__item--prototype');
+  const ulElCart = domHelper.findElement('.panel__summary');
+  const prototypeLiCart = domHelper.findElement('.summary__item--prototype');
+  const elementsExist = domHelper.areElementsInDOM(ulEl, prototypeLi, ulElCart, prototypeLiCart)
 
-  exManager.showTrips(ulEl, prototypeLi);
-  exManager.addToCart()
-  ulEl.addEventListener('listLoaded', exManager.orderTrips(ulEl))
+  if (elementsExist) {
+    exManager.showTrips(ulEl, prototypeLi);
+    // exManager.addToCart()
+    ulEl.addEventListener('listLoaded', exManager.orderTrips(ulEl, prototypeLi, ulElCart, prototypeLiCart))
+  }
 }
 
