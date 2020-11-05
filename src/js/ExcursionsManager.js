@@ -188,92 +188,113 @@ export default class ExcursionsManager {
   // tutaj dla client.js
 
 
-  orderTrips(ulEl, prototypeLi, ulElCart, prototypeLiCart) {
-
+  orderTrips(ulEl, ulElCart, prototypeLiCart) {
     ulEl.addEventListener('submit', e => {
       e.preventDefault();
-      this.addToCart(e, ulEl, prototypeLi, ulElCart, prototypeLiCart);
+      this.createCartLiEl(e, ulElCart, prototypeLiCart);
+      this.sumWholeCart(ulElCart);
     })
   }
 
-  addToCart(e, ulEl, prototypeLi, ulElCart, prototypeLiCart) {
-    console.log('funckja jedynie się uruchomiła');
-    const cartItemsObj = this._createCartLiEl(ulElCart, prototypeLiCart);
-    const orderDataObj = this._getTripOrderData(e);
-
-    this._putOrderToCart(cartItemsObj, orderDataObj);
-  }
-
-  _putOrderToCart(cartItemsObj, orderDataObj) {
-    for (let element in cartItemsObj) {
-      cartItemsObj[element].innerText = orderDataObj[element]
-    }
-  }
-  // OK, nie tak. Trzeba wrzucić przyporządkowywanie innerTextu do jednej funkcji, by można było dodać Li do koszyka
-
-
-  _getInnerText(element) {
-    return element.innerText
-  }
-
-  // TO SĄ DANE I INPUTY KTÓRE MAM POBRAĆ Z DANEJ WYCIECZKI Z LISTY
-  _getTripOrderData(e) {
-    const title = domHelper.findElement('.excursions__title', e.target.parentElement);
-    const priceAdult = domHelper.findElement('.excursions__price-adult', e.target);
-    const priceChildren = domHelper.findElement('.excursions__price-child', e.target);
-    const amountAdult = domHelper.findElement('[name=adults]', e.target);
-    const amountChildren = domHelper.findElement('[name=children]', e.target);
-
-    //optymalniej byłoby wrzucić powyższe zmienne do tablicy i zrobić spread, czy przy tej ilości można jak poniżej - po prostu je wymienić?
-    if (this._isOrderValid(title, priceAdult, priceChildren, amountAdult, amountChildren)) {
-      return this._createObjWithOrderData(title, priceAdult, priceChildren, amountAdult, amountChildren)
-    }
-  }
-
-  _createObjWithOrderData(title, priceAdult, priceChildren, amountAdult, amountChildren) {
-    return {
-      title: title.innerText,
-      priceAdult: priceAdult.innerText,
-      priceChild: priceChildren.innerText,
-      amountAdult: amountAdult.value === '' ? 0 : amountAdult.value,
-      amountChildren: amountChildren.value === '' ? 0 : amountChildren.value
-    }
-  }
-
-  _isOrderValid(title, priceAdult, priceChildren, amountAdult, amountChildren) {
-    if (formValidation.isFieldFilled(amountAdult) || formValidation.isFieldFilled(amountChildren)) {
-      const areInDOM = domHelper.isElementInDOM(title, priceAdult, priceChildren);
-      const oneSlotNotZeroOrEmpty = formValidation.onlyOneValueMoreThanZero(amountAdult, amountChildren);
-      const areValuesNumbers = formValidation.areValuesNumbers(amountAdult, amountChildren);
-      const boleanArr = [areInDOM, oneSlotNotZeroOrEmpty, areValuesNumbers];
-      return boleanArr.every(el => el === true)
-    }
-    // else - obsługa błędu -> pola nie zostały wypełnione
-  }
+  
   // TO SĄ MIEJSCA W KOSZYKU, DO KTÓRYCH MAM WRZUCIĆ NOWY INNER TEXT
-  _createCartLiEl(ulElCart, prototypeLiCart) {
+  createCartLiEl(e, ulElCart, prototypeLiCart) {
     const liEl = domHelper.createElementFromPrototype(prototypeLiCart, 'prototype');
-    const title = domHelper.findElement('.summary__name', liEl);
-    const priceAdult = domHelper.findElement('.summary__prices-adult', liEl);
-    const priceChildren = domHelper.findElement('.summary__prices-children', liEl);
-    const amountAdult = domHelper.findElement('.summary__amount-adult', liEl);
-    const amountChildren = domHelper.findElement('.summary__amount-children', liEl);
-    const elementsExist = domHelper.areElementsInDOM(title, priceAdult, priceChildren, amountAdult, amountChildren)
+
+    const objOfEls = this._createObjWithDOMElements(liEl);
+    const objOfValues = this._createObjWithValues(e.target);
+
+    if (objOfEls && objOfValues) {
+      domHelper.assignInnerTextFromValuesObj(objOfEls, objOfValues);
+      this._makeTripRemovable(liEl, ulElCart);
+      ulElCart.appendChild(liEl);
+    }
+  }
+
+  sumWholeCart(ulElCart) {
+    const liElSums = domHelper.findMultipleElements('.summary__total-price', ulElCart);
+    const totalSum = domHelper.findElement('.order__total-price-value');
+    liElSums.shift() //usuwam element pobrany z klasy --prototype (zapewne można lepiej...?)
+    const valuesToSum = liElSums.map(el => parseFloat(el.innerText))
+    const valuesSum = valuesToSum.reduce((a, b) => a + b, 0)
+    totalSum.innerText = valuesSum
+  }
+
+  _makeTripRemovable(liEl) {
+    const removeBtn = domHelper.findElement('.summary__btn-remove', liEl);
+    //czy da się w poniższej funkcji przekazać dodatkowy parametr, np. this._removeTripFromCart(e, ulElCart)?
+    removeBtn.addEventListener('click', this._removeTripFromCart);
+  }
+  
+  _removeTripFromCart(e) {
+    e.preventDefault()
+    const parentLiEl = e.currentTarget.closest('.summary__item');
+    parentLiEl.remove();
+    const ulElCart = domHelper.findElement('.panel__summary');
+    this.sumWholeCart(ulElCart);
+  }
+
+  _createObjWithDOMElements(root) {
+    const options = {
+      title: { sel: '.summary__name' },
+      priceAdult: { sel: '.summary__prices-adult' },
+      priceChildren: { sel: '.summary__prices-children' },
+      amountAdult: { sel: '.summary__amount-adult' },
+      amountChildren: { sel: '.summary__amount-children' },
+      sumPrice: { sel: '.summary__total-price' }
+    }
+
+    const objOfEls = domHelper.createObjOfElementsOrValues(options, root);
+
+    const elementsExist = domHelper.areElementsInDOM({ ...objOfEls });
 
     if (elementsExist) {
-      return this._createObjWithCartItems(title, priceAdult, priceChildren, amountAdult, amountChildren)
+      return objOfEls
     }
   }
 
-  _createObjWithCartItems(title, priceAdult, priceChildren, amountAdult, amountChildren) {
-    return {
-      title,
-      priceAdult,
-      priceChildren,
-      amountAdult,
-      amountChildren
+  _createObjWithValues(root) {
+    const options = {
+      title: { sel: '.excursions__title', root: root.parentElement, prop: 'innerText' },
+      priceAdult: { sel: '.excursions__price-adult', prop: 'innerText' },
+      priceChildren: { sel: '.excursions__price-child', prop: 'innerText' },
+      amountAdult: { sel: '[name=adults]', prop: 'value' },
+      amountChildren: { sel: '[name=children]', prop: 'value' }
     }
+    const objOfValues = domHelper.createObjOfElementsOrValues(options, root);
+
+    return this._createObjIfAmoutIsEnough(objOfValues)
   }
+
+  //////////////////////// Jak to wykorzystać, by działało? - w linii 280
+  // _changeFalsyValuesToZero(...values) {
+  //   [...values].forEach(value => {
+  //     formValidation.isValueZeroOrEmpty(value) ? value = 0 : value;
+  //   })
+  // }
+
+  _createObjIfAmoutIsEnough(obj) {
+    const { amountAdult, amountChildren } = obj
+
+    if (formValidation.onlyOneValueMoreThanZero(amountAdult, amountChildren)) {
+      //tu ma być funkcja w stylu this._changeFalsyValuesToZero(...values), ale coś mi nie idzie ;P
+      if (formValidation.isValueZeroOrEmpty(amountAdult)) {
+        obj.amountAdult = 0;
+      }
+      if (formValidation.isValueZeroOrEmpty(amountChildren)) {
+        obj.amountChildren = 0
+      }
+      obj.sumPrice = this._createSumPriceProperty(obj)
+
+      // w takiej sytuacji chyba nie bardzo mam jak sprawdzić, czy wyszukane elementy istnieją (?)
+      return obj
+    } else { alert('Wybierz liczbę uczestników') } 
+  }
+  _createSumPriceProperty({ priceAdult, amountAdult, priceChildren, amountChildren }) {
+    return parseFloat(priceAdult) * parseFloat(amountAdult) + parseFloat(priceChildren) * parseFloat(amountChildren);
+  }
+
+
 
 }
 

@@ -13,12 +13,16 @@ export default class FormValidation {
     // else { this.returnError(`pole \"${formEl.parentElement.innerText}\" nie zostało wypełnione`) }
   }
 
-  isValueZeroOrEmpty(formEl) {
+  isFieldValueZeroOrEmpty(formEl) {
     return formEl.value === '' || formEl.value === "0"
   }
+  
+  isValueZeroOrEmpty(value) {
+    return value === '' || value === "0"
+  }
 
-  onlyOneValueMoreThanZero(...formElements) {
-    return [...formElements].some(element => !this.isValueZeroOrEmpty(element))
+  onlyOneValueMoreThanZero(...values) {
+    return [...values].some(value => !this.isValueZeroOrEmpty(value))
   }
 
   areReqFieldsFilled(fieldsArr) {

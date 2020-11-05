@@ -25,6 +25,28 @@ export default class DOMHelper {
     return [...(elements)]
   }
 
+  createObjOfElementsOrValues(options, rootElement = document) {
+    const obj = {};
+    for (const key in options) {
+      if (options[key].root) {
+        obj[key] = this.findElement(options[key].sel, options[key].root);
+      } else {
+        obj[key] = this.findElement(options[key].sel, rootElement);
+      }
+      if (options[key].prop) {
+        obj[key] = obj[key][options[key].prop]
+      }
+    }
+    return obj
+  }
+
+  assignInnerTextFromValuesObj(DOMElObj, valuesObj) {
+    for (const key in DOMElObj) {
+      DOMElObj[key].innerText = valuesObj[key]
+    }
+  }
+
+
   hideElement(element) {
     element.style.display = 'none'
   }

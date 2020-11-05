@@ -1,4 +1,4 @@
-import './../css/admin.css';
+import './../css/client.css';
 import DOMHelper from './DOMHelper';
 import ExcursionsManager from './ExcursionsManager';
 
@@ -15,8 +15,7 @@ function init() {
 
   if (elementsExist) {
     exManager.showTrips(ulEl, prototypeLi);
-    // exManager.addToCart()
-    ulEl.addEventListener('listLoaded', exManager.orderTrips(ulEl, prototypeLi, ulElCart, prototypeLiCart))
+    ulEl.addEventListener('listLoaded', exManager.orderTrips(ulEl, ulElCart, prototypeLiCart))
   }
 }
 
