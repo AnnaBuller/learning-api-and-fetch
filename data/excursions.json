@@ -2,165 +2,47 @@
   "excursions": [
     {
       "title": "Grudziądz",
-      "description": "małe miasto kuj-pom",
+      "description": "niewielkie miasto kuj-pom",
       "price-adult": "80",
       "price-child": "40",
       "id": 1
     },
     {
-      "title": "Kotki dwa",
-      "description": "Tralala, zaspiewajmy sobie o dwóch kotkach. Lorem Ipsum dolor sit amet to jes topis wycieczki o tytule Lorem Ipsum",
-      "price-adult": 500,
-      "price-child": 20,
-      "id": 2
-    },
-    {
-      "title": "Frombork",
-      "description": "helllooooooooooo",
-      "price-adult": "",
-      "price-child": "",
-      "id": 13
-    },
-    {
-      "title": "Gdynia",
-      "description": "",
-      "price-adult": "",
-      "price-child": "",
-      "id": 14
-    },
-    {
-      "title": "Kraków",
-      "description": "888888888",
-      "price-adult": "",
-      "price-child": "",
-      "id": 15
-    },
-    {
-      "title": "Warszawa",
-      "description": "pałac\n",
-      "price-adult": "",
-      "price-child": "",
-      "id": 16
-    },
-    {
-      "title": "Białystok",
-      "description": "nie wiem co tam jest",
-      "price-adult": "",
-      "price-child": "",
-      "id": 17
-    },
-    {
-      "title": "Sopot",
-      "description": "niedaleko\n",
-      "price-adult": "",
-      "price-child": "",
-      "id": 18
-    },
-    {
-      "title": "gdy",
-      "description": "",
-      "price-adult": "",
-      "price-child": "",
-      "id": 19
-    },
-    {
       "title": "Olsztyn",
-      "description": "COŚ O oLSZTYYNIE",
-      "price-adult": "12",
-      "price-child": "",
-      "id": 20
-    },
-    {
-      "title": "Olsztyn",
-      "description": "COŚ O oLSZTYYNIE",
+      "description": "COŚ O OLSZTYNIE",
       "price-adult": "12",
       "price-child": "30",
-      "id": 21
+      "id": 2
     },
     {
       "title": "Starogard",
       "description": "coś o starogardzie",
       "price-adult": "20",
       "price-child": "5",
-      "id": 37
+      "id": 3
     },
     {
       "title": "Sulęczyno",
-      "description": "wioska na Kaszybach",
+      "description": "wioska na Kaszubach",
       "price-adult": "30",
       "price-child": "12",
-      "id": 38
+      "id": 4
     },
     {
       "title": "Krokwie",
       "description": "nie wiem co to jet",
       "price-adult": "56",
       "price-child": "9",
-      "id": 39
-    },
-    {
-      "title": "Gdynia123",
-      "description": "123",
-      "price-adult": "123",
-      "price-child": "12",
-      "id": 40
-    },
-    {
-      "title": "",
-      "description": "",
-      "price-adult": "",
-      "price-child": "",
-      "id": 41
-    },
-    {
-      "title": "",
-      "description": "",
-      "price-adult": "",
-      "price-child": "",
-      "id": 42
-    },
-    {
-      "title": "",
-      "description": "",
-      "price-adult": "",
-      "price-child": "",
-      "id": 43
-    },
-    {
-      "title": "Koleczkowo",
-      "description": "chyba pomirskie",
-      "price-adult": "13",
-      "price-child": "12",
-      "id": 44
-    },
-    {
-      "title": "Nowa Sól",
-      "description": "słono",
-      "price-adult": "90",
-      "price-child": "78",
-      "id": 45
-    },
-    {
-      "title": "Halo",
-      "description": "halo",
-      "price-adult": "34",
-      "price-child": "89",
-      "id": 46
-    },
-    {
-      "title": "Anna",
-      "description": "sdfg",
-      "price-adult": "34",
-      "price-child": "34",
-      "id": 47
-    },
-    {
-      "title": "",
-      "description": "",
-      "price-adult": "",
-      "price-child": "",
-      "id": 48
+      "id": 5
     }
   ],
-  "orders": []
+  "orders": [
+    {
+      "name": "Gdynia",
+      "email": "ania@wp.pl",
+      "total-price": 199,
+      "ordered-trips-data": [],
+      "id": 1
+    }
+  ]
 }
