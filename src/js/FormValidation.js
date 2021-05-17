@@ -1,6 +1,10 @@
 export default class FormValidation {
 
-  isValueANumber(formEl) {
+  isValueANumber(value) {
+    return !isNaN(value)
+  }
+
+  isFormValueANumber(formEl) {
     return !isNaN(formEl.value)
   }
 
@@ -10,7 +14,6 @@ export default class FormValidation {
 
   isFieldFilled(formEl) {
     return formEl.value !== ''
-    // else { this.returnError(`pole \"${formEl.parentElement.innerText}\" nie zostało wypełnione`) }
   }
 
   isFieldValueZeroOrEmpty(formEl) {
@@ -26,12 +29,35 @@ export default class FormValidation {
   }
 
   areReqFieldsFilled(fieldsArr) {
-    console.log(fieldsArr)
     return fieldsArr.every(field => this.isFieldFilled(field)
     )
   }
 
   returnError(message) {
     console.log(message)
+  }
+
+  isValidEmail(emailAddress) {
+    return /^\S+@\S+\.\S+$/.test(emailAddress)
+  }
+
+  hasLetterSpaceDash(myString) {
+    return /^[a-z\s\-]+$/i.test(myString);
+  }
+
+  hasEnoughWords(string, nWords) {
+    return string.split(' ').length >= nWords
+  }
+
+  capitFirstLetters(string) {
+    const splitArr = string.includes('-') ? string.toLowerCase().split('-') : string.toLowerCase().split(' ');
+    const temporaryArr = [];
+    splitArr.forEach(word => {
+      if (word !== '') {
+        temporaryArr.push(word.replace(word[0], word[0].toUpperCase()));
+      }
+    })
+    const lastArr = string.includes('-') ? temporaryArr.join('-') : temporaryArr.join(' ')
+    return lastArr
   }
 }
