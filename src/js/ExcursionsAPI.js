@@ -39,11 +39,6 @@ class ExcursionsAPI {
     return promise      
       .then(res => res.ok ? res.json() : Promise.reject(res))
   }
-
 }
-
-const kk = new ExcursionsAPI();
-
-
 
 export default ExcursionsAPI;
