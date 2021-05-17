@@ -55,3 +55,9 @@ ul {
 .form__field--longtext {
     height: 100px;
 }
+
+.form__send-success {
+    color: rgb(26, 168, 26);
+    padding-top: 20px;
+    opacity: 1;
+}
