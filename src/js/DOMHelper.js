@@ -46,7 +46,6 @@ export default class DOMHelper {
     }
   }
 
-
   hideElement(element) {
     element.style.display = 'none'
   }
@@ -80,10 +79,18 @@ export default class DOMHelper {
     return Array.from(formElements).map(slot => slot.value)
   }
 
+  clearFormFields(fieldsArr) {
+    fieldsArr.forEach(field => field.value = '')
+  }
+
   isElementInDOM(element) {
     return element !== null
   }
   areElementsInDOM(...elements) {
     return [...elements].every(element => this.isElementInDOM(element))
-}
+  }
+
+  areElementsEditable(arr) {
+    return [...arr].every(el => el.isContentEditable)
+  }
 }
